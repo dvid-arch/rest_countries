@@ -1,16 +1,25 @@
-let option = document.getElementById('sel');
+ let option = document.getElementById('sel');
 const body = document.getElementById('body')
 const container = document.getElementById('container')
 const choicebtn = document.getElementById('choice')
 let lightmode = document.getElementById('light-mode')
-let toFectch = "https://restcountries.com/v3.1/all";
+ let toFectch = "https://restcountries.com/v3.1/all";
 let searchInput = document.getElementById('search');
 let search = document.getElementById('sIcon')
 
+function showLoader(){
+    container.style.minHeight = '100vh'
+    container.style.background = '#fff url(./gif.gif) no-repeat center center'
+}
+
+function hideLoader(){
+    container.style.background = '';
+}
+showLoader()
  fetch(toFectch)
 .then(response => response.json()
 .then(x => {  
-    
+    hideLoader()
     option.addEventListener('click', ()=>{
         if(option.value.length < 1) return;
         let choice = option.value
@@ -39,7 +48,7 @@ let search = document.getElementById('sIcon')
             container.innerHTML += `
             <div class='col-md-6 col-lg-3' id='card'>
             <div class='card h-100 p-3'>
-            <img src="${val1}" alt="" class='img-fluid card-image text-align-center h-50'>
+            <img src="${val1}" alt="${val2}" class='img-fluid card-image text-align-center h-50'>
             <h2 class="card-title py-4">${val2}</h2>
             <ul class='list-group list-group-flush lead' id='ul'>
                 <li class = 'list-group-item'><span class='fw-bold'>Population: </span>${val3}</li>
@@ -65,7 +74,7 @@ let search = document.getElementById('sIcon')
     }
    
 })
-console.log('owee'.indexOf('o'))
+
 search.addEventListener('click', ()=>{
     let searchItem = searchInput.value.toLowerCase()
     if(/[a-z]/.test(searchItem)){
@@ -84,10 +93,20 @@ search.addEventListener('click', ()=>{
     }
     
 })
-   
+let img = document.getElementsByTagName('img')
+
+for (const element of img) {
+    element.addEventListener('click',()=>{
+        
+        let countryName = element.getAttribute('alt')
+    
+        localStorage.setItem('name', `${countryName}` )
+        window.location = "render.html"
+    })
+}
 }))
 
-export function parses(val) {
+function parses(val) {
     if(val==undefined){
         return;
     } else if(typeof(val)=='string' || typeof(val)=='number'){
@@ -99,7 +118,7 @@ export function parses(val) {
     }
 }
 
-export function sorted(x) {
+function sorted(x) {
     let newCon = x.sort((a,b)=>{
         if(a.name.common > b.name.common){
             return 1;
@@ -111,6 +130,7 @@ export function sorted(x) {
     })
     return newCon
 }
+
 
 //search section
 
